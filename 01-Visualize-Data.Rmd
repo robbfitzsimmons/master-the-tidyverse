@@ -17,7 +17,8 @@ mpg
 Run the code on the slide to make a graph. Pay strict attention to spelling, capitalization, and parentheses!
 
 ```{r}
-
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
 ```
 
 ## Your Turn 2
@@ -26,7 +27,7 @@ Add `color`, `size`, `alpha`, and `shape` aesthetics to your graph. Experiment.
 
 ```{r}
 ggplot(data = mpg) +
-  geom_point(mapping = aes(x = displ, y = hwy))
+  geom_point(mapping = aes(x = displ, y = hwy, color = class, size = cyl))
 ```
 
 ## Your Turn 3
@@ -34,7 +35,7 @@ ggplot(data = mpg) +
 Replace this scatterplot with one that draws boxplots. Use the cheatsheet. Try your best guess.
 
 ```{r}
-ggplot(mpg) + geom_point(aes(class, hwy))
+ggplot(mpg) + geom_boxplot(aes(class, hwy))
 ```
 
 ## Your Turn 4
@@ -42,7 +43,8 @@ ggplot(mpg) + geom_point(aes(class, hwy))
 Make a histogram of the `hwy` variable from `mpg`.
 
 ```{r}
-
+ggplot(mpg) +
+  geom_histogram(aes(hwy), binwidth = 2)
 ```
 
 ## Your Turn 5
@@ -50,7 +52,8 @@ Make a histogram of the `hwy` variable from `mpg`.
 Make a density plot of `hwy` colored by `class`.
 
 ```{r}
-
+ggplot(mpg) +
+  geom_density(aes(hwy, color = class))
 ```
 
 ## Your Turn 6
@@ -58,7 +61,8 @@ Make a density plot of `hwy` colored by `class`.
 Make a bar chart `hwy` colored by `class`.
 
 ```{r}
-
+ggplot(mpg) +
+  geom_bar(aes(class, fill = class))
 ```
 
 ## Your Turn 7
@@ -66,9 +70,9 @@ Make a bar chart `hwy` colored by `class`.
 Predict what this code will do. Then run it.
 
 ```{r}
-ggplot(mpg) + 
-  geom_point(aes(displ, hwy)) +
-  geom_smooth(aes(displ, hwy))
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() +
+  geom_smooth()
 ```
 
 ## Your Turn 8
@@ -76,7 +80,7 @@ ggplot(mpg) +
 What does `getwd()` return?
 
 ```{r}
-
+getwd()
 ```
 
 ## Your Turn 9
@@ -84,7 +88,7 @@ What does `getwd()` return?
 Save the last plot and then locate it in the files pane.
 
 ```{r}
-
+ggsave()
 ```
 
 ***
