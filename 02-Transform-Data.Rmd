@@ -205,7 +205,9 @@ babynames %>%
 Use `min_rank()` and `mutate()` to rank each row in `babynames` from largest `n` to lowest `n`.
 
 ```{r}
-
+babynames %>%
+  mutate(rank = min_rank(desc(n))) %>% 
+  arrange(rank)
 ```
 
 ## Your Turn 12
@@ -214,7 +216,13 @@ Compute each name's rank _within its year and sex_.
 Then compute the median rank _for each combination of name and sex_, and arrange the results from highest median rank to lowest.
 
 ```{r}
-
+babynames %>%
+  group_by(year, sex) %>% 
+  mutate(rank = min_rank(desc(prop))) %>% 
+  ungroup() %>% 
+  group_by(name, sex) %>% 
+  summarise(median_rank = median(rank)) %>% 
+  arrange(median_rank)
 ```
 
 ## Your Turn 13
@@ -227,10 +235,10 @@ Which airlines had the largest arrival delays? Complete the code below.
 ```{r}
 flights %>%
   drop_na(arr_delay) %>%
-                      %>%
-  group_by(         ) %>%
-                      %>%
-  arrange(       ) 
+  left_join(airlines, by = "carrier")  %>%
+  group_by(name) %>%
+  summarise(avg_arr_delay = mean(arr_delay)) %>%
+  arrange(avg_arr_delay)
 ```
 
 ## Your Turn 14
@@ -239,9 +247,9 @@ How many airports in `airports` are serviced by flights originating in New York 
 
 
 ```{r}
-__________ %>%
- _________(_________, by = ___________) %>%
-  distinct(faa)
+airports %>%
+ semi_join(flights, by = c("faa" = "dest")) %>%
+ distinct(faa)
 ```
 
 
