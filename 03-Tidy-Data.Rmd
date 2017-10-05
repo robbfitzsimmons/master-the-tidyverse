@@ -47,7 +47,8 @@ On a sheet of paper, draw how the cases data set would look if it had the same v
 Use `gather()` to reorganize `table4a` into three columns: **country**, **year**, and **cases**.
 
 ```{r}
-
+table4a %>% 
+  gather(-country, key="year", value="cases")
 ```
 
 ## Your Turn 3
