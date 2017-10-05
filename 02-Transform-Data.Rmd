@@ -54,7 +54,7 @@ babynames
 Alter the code to select just the `n` column:
 
 ```{r}
-select(babynames, name, prop)
+select(babynames, n)
 ```
 
 ## Quiz
@@ -65,7 +65,7 @@ Which of these is NOT a way to select the `name` and `n` columns together?
 select(babynames, -c(year, sex, prop))
 select(babynames, name:n)
 select(babynames, starts_with("n"))
-select(babynames, ends_with("n"))
+select(babynames, ends_with("n")) # This one.
 ```
 
 ## Your Turn 2
@@ -77,8 +77,9 @@ Show:
 * All of the names that have a missing value for `n`  
 
 ```{r}
+filter(babynames, prop >= 0.08)
+filter(babynames, name == "Sea")
 filter(babynames, is.na(n))
-
 ```
 
 ## Your Turn 3
@@ -90,7 +91,14 @@ Use Boolean operators to alter the code below to return only the rows that conta
 * Names that are one of Acura, Lexus, or Yugo
 
 ```{r}
-filter(babynames, name == "Sea" | name == "Anemone")
+filter(babynames, name == "Sea" & sex == "F")
+filter(babynames, n == 5 | n == 6, year == 1880)
+filter(babynames, name == c("Acura", "Lexus", "Yugo"))
+
+# one-liner
+filter(babynames, name == "Sea" & sex == "F" |
+         ((n == 5 | n == 6) & year == 1880) |
+         name == c("Acura","Lexus","Yugo"))
 ```
 
 ## Your Turn 4
@@ -98,7 +106,7 @@ filter(babynames, name == "Sea" | name == "Anemone")
 Arrange babynames by `n`. Add `prop` as a second (tie breaking) variable to arrange on. Can you tell what the smallest value of `n` is?
 
 ```{r}
-
+arrange(babynames, n, prop)
 ```
 
 ## Your Turn 5
@@ -107,7 +115,8 @@ Use `desc()` to find the names with the highest prop.
 Then, use `desc()` to find the names with the highest n.
 
 ```{r}
-
+arrange(babynames, desc(prop))
+arrange(babynames, desc(n))
 ```
 
 ## Your Turn 6
@@ -119,7 +128,10 @@ Use `%>%` to write a sequence of functions that:
 3. Arrange the results so that the most popular names are near the top.
 
 ```{r}
-
+babynames %>%
+  filter(sex == "F" & year == 2015) %>% 
+  select(name, n) %>% 
+  arrange(desc(n))
 ```
 
 ## Exam
@@ -129,7 +141,11 @@ Use `%>%` to write a sequence of functions that:
 3. Plot the results as a line graph with `year` on the x axis and `prop` on the y axis
 
 ```{r}
-
+babynames %>% 
+  filter(name == "Robert" & sex == "M") %>% 
+  select(name, prop, year, sex) %>% 
+  ggplot() +
+    geom_line(aes(year, prop))
 ```
 
 ## Your Turn 7
@@ -141,7 +157,10 @@ Use summarise() to compute three statistics about the data:
 3. The total number of children represented in the data
 
 ```{r}
-
+babynames %>% 
+  summarise(first = min(year),
+            last = max(year),
+            total = sum(n))
 ```
 
 ## Your Turn 8
@@ -152,7 +171,10 @@ Extract the rows where `name == "Khaleesi"`. Then use `summarise()` and a summar
 2. The first year Khaleesi appeared in the data
 
 ```{r}
-
+babynames %>% 
+  filter(name == "Khaleesi") %>% 
+  summarise(total = sum(n),
+            first = min(year))
 ```
 
 ## Your Turn 9
@@ -160,7 +182,10 @@ Extract the rows where `name == "Khaleesi"`. Then use `summarise()` and a summar
 Use `group_by()`, `summarise()`, and `arrange()` to display the ten most popular names. Compute popularity as the total number of children of a single gender given a name.
 
 ```{r}
-
+babynames %>%
+  group_by(name, sex) %>% 
+  summarise(total = sum(n)) %>% 
+  arrange(desc(total))
 ```
 
 ## Your Turn 10
@@ -168,7 +193,11 @@ Use `group_by()`, `summarise()`, and `arrange()` to display the ten most popular
 Use grouping to calculate and then plot the number of children born each year over time.
 
 ```{r}
-
+babynames %>%
+  group_by(year) %>% 
+  summarise(births = sum(n)) %>% 
+  ggplot() +
+    geom_line(aes(year, births))
 ```
 
 ## Your Turn 11
