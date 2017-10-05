@@ -56,7 +56,7 @@ Notice that the code above saves the output to an object named nimbus. You must 
 Find nimbus.csv on your server or computer. Then read it into an object. Then view the results.
 
 ```{r}
-
+nimbus <- read_csv("nimbus.csv")
 ```
 
 ## Tibbles
@@ -95,7 +95,7 @@ To do this, add the argument `col_types` to `read.csv()` and set it equal to a l
 
 ```{r eval = FALSE}
 nimbus <- read_csv("nimbus.csv", na = ".",
-                   col_types = list(ozone = #something)
+                   col_types = list(ozone = col_double())
 ```
 
 To complete the code, set `ozone` equal to one of the functions below, each function instructs `read_csv()` to parse `ozone` as a specific type of data.
