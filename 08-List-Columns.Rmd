@@ -19,7 +19,10 @@ How has life expectancy changed since 1952?
 Using `gapminder`, make a line plot of **lifeExp** vs. **year** grouped by **country**. Set alpha to 0.2, to see the results better.
 
 ```{r}
-
+gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 0.2)
+  
 ```
 
 ## Your Turn 2
@@ -33,7 +36,12 @@ Using `gapminder`, make a line plot of **lifeExp** vs. **year** grouped by **cou
     + facet_wrap(~continent)
 
 ```{r warning = FALSE}
-
+gapminder %>% 
+  group_by(country, continent) %>% 
+  do(lm(lifeExp ~ year, data = .) %>% augment()) %>% 
+  ggplot() +
+    geom_line(aes(year, .resid, group = country, alpha = 0.2)) +
+    facet_wrap(~continent)
 ```
 
 ## Your Turn 3
@@ -44,18 +52,18 @@ Use the result to plot a line graph of `year` vs. `.resid` colored by `country` 
 
 ```{r warning = FALSE}
 bad_fits <- gapminder %>% 
-  group_by(_______) %>% 
-  do(lm(lifeExp ~ year, data = ____) %>%  glance()) %>% 
-  filter(___________) 
+  group_by(country) %>% 
+  do(lm(lifeExp ~ year, data = .) %>%  glance()) %>% 
+  filter(r.squared < 0.25) 
 
 residuals <- gapminder %>% 
-  group_by(_______) %>% 
-  do(________________________________________) 
+  group_by(country) %>% 
+  do(lm(lifeExp ~ year, data = .) %>% augment())
 
 residuals %>% 
-  ___________(bad_fits) %>% 
+  semi_join(bad_fits, by = "country") %>% 
   ggplot() +
-    _________________________________________
+    geom_line(aes(year, .resid, color = country))
 ```
 
 ## Your Turn 4
