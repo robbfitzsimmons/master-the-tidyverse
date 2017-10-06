@@ -25,7 +25,10 @@ Finally, create a summary table that shows:
 2. What proportion of flights were delayed
 
 ```{r}
-
+flights %>% 
+  mutate(delayed = arr_delay > 0) %>% 
+  drop_na(delayed) %>% 
+  summarize(delayed_flights = sum(delayed == TRUE), delayed_pct = (sum(delayed == TRUE) / n() * 100))
 ```
 
 
