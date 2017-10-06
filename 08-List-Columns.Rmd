@@ -75,14 +75,14 @@ Create your own copy of master and then add one more list column:
 ```{r warning = FALSE}
 fit_model <- function(df) lm(lifeExp ~ year, data = df)
 get_rsq <- function(mod) glance(mod)$r.squared
-_______________________________________________ # write a function that applies augment ot a model
+get_output <- function(mod) augment(mod) # write a function that applies augment ot a model
 
 master <- gapminder %>% 
-  ___________ %>% # group gapminder
-  ___________ %>% # nest gapminder
-  mutate(model =  ________________________, # add a model column
-         r.squared = _____________________, # add an r.squared column
-         output = ________________________) # add an output column
+  group_by(country) %>% # group gapminder
+  nest %>% # nest gapminder
+  mutate(model =  map(data, fit_model), # add a model column
+         r.squared = map_dbl(model, get_rsq), # add an r.squared column
+         output = map(model, get_output)) # add an output column
 master
 ```
 
@@ -91,7 +91,11 @@ master
 Use master to recreate our plot of the residuals vs `year` for the six countries with an r squared less than 0.25.
 
 ```{r}
-  
+master %>% 
+  filter(r.squared < 0.25) %>% 
+  unnest(output) %>% 
+  ggplot() +
+    geom_line(aes(year, .resid, color = country))
 ```
 
 ***
