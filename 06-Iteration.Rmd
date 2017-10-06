@@ -32,11 +32,11 @@ a_list <- list(num = c(8, 9),
 Here are two subsetting commands. Do they return the same values? Run the code chunk above, _and then_ run the code chunks below to confirm
 
 ```{r}
-a_list["num"]
+a_list["num"] # Returns a list of the values (class: list).
 ```
 
 ```{r}
-a_list$num
+a_list$num # Returns just the values (class: numeric).
 ```
 
 ## Your Turn 2
@@ -74,7 +74,7 @@ map(exams, mean)
 Calculate the variance (`var()`) of each student’s exam grades.
 
 ```{r}
-
+map(exams, var)
 ```
 
 ## Your Turn 5
@@ -82,7 +82,7 @@ Calculate the variance (`var()`) of each student’s exam grades.
 Calculate the max grade (max())for each student. Return the result as a vector.
 
 ```{r}
-
+map_dbl(exams, max)
 ```
 
 ## Your Turn 6
@@ -94,7 +94,12 @@ Write a function that counts the best exam twice and then takes the average. Use
 3. Add the name of the real object as the function argument 
 
 ```{r}
+grade <- function(vec){
+  (sum(vec) + max(vec)) / (length(vec) + 1)
+}
 
+exams %>% 
+  map_dbl(grade)
 ```
 
 ### Your Turn 7
@@ -102,7 +107,12 @@ Write a function that counts the best exam twice and then takes the average. Use
 Compute a final grade for each student, where the final grade is the average test score plus any `extra_credit` assigned to the student. Return the results as a double (i.e. numeric) vector.
 
 ```{r}
+grade <- function(list, extra_credit){
+  sum(mean(list), extra_credit)
+}
 
+exams %>% 
+  map2_dbl(extra_credit, grade)
 ```
 
 
